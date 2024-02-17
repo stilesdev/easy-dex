@@ -1,0 +1,3 @@
+[submodule "source-data/dataset"]
+	path = internal/dataset/data
+	url = https://github.com/supeffective/dataset
