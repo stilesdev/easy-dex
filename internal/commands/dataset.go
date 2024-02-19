@@ -3,11 +3,12 @@ package commands
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	"io/fs"
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stilesdev/easy-dex/internal/database"
 	"github.com/stilesdev/easy-dex/internal/database/sqlc"
+	"github.com/stilesdev/easy-dex/internal/dataset"
 	"github.com/stilesdev/easy-dex/internal/pokemon"
 	"github.com/urfave/cli/v2"
 )
@@ -85,15 +86,10 @@ func Dataset(db *database.Connection) *cli.Command {
 }
 
 func readPokemonIndex() ([]pokemon.IndexPokemon, error) {
-    file := "./internal/dataset/data/data/pokemon-index.json"
-
-    data, err := os.ReadFile(file)
-    if err != nil {
-        return nil, err
-    }
+    data := dataset.PokemonIndexJSON
 
     var index []pokemon.IndexPokemon
-    err = json.Unmarshal(data, &index)
+    err := json.Unmarshal(data, &index)
     if err != nil {
         return nil, err
     }
@@ -102,9 +98,9 @@ func readPokemonIndex() ([]pokemon.IndexPokemon, error) {
 }
 
 func readPokemonInput(region string, id string) (pokemon.PokemonInput, error) {
-    file := fmt.Sprintf("./internal/dataset/data/data/pokemon/%s/%s.json", region, id)
+    file := fmt.Sprintf("data/data/pokemon/%s/%s.json", region, id)
 
-    data, err := os.ReadFile(file)
+    data, err := fs.ReadFile(dataset.PokemonDataFS, file)
     if err != nil {
         return pokemon.PokemonInput{}, err
     }
