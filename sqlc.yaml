@@ -1,0 +1,32 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "internal/database/queries"
+    schema: "internal/database/migrations"
+    gen:
+      go:
+        package: "sqlc"
+        out: "internal/database/sqlc"
+        sql_package: "pgx/v5"
+        overrides:
+          - column: "pokemon.abilities"
+            go_type:
+              import: "github.com/stilesdev/easy-dex/internal/pokemon"
+              package: "pokemon"
+              type: "PokemonAbilities"
+          - column: "pokemon.base_stats"
+            go_type:
+              import: "github.com/stilesdev/easy-dex/internal/pokemon"
+              package: "pokemon"
+              type: "PokemonStats"
+          - column: "pokemon.evolves_from"
+            go_type:
+              import: "github.com/stilesdev/easy-dex/internal/pokemon"
+              package: "pokemon"
+              type: "EvolvesFrom"
+              pointer: true
+          - column: "pokemon.refs"
+            go_type:
+              import: "github.com/stilesdev/easy-dex/internal/pokemon"
+              package: "pokemon"
+              type: "ExternalRefs"
